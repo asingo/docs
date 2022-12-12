@@ -17,9 +17,10 @@ class LoginController extends Controller
         $this->middleware('guest')->except('actionLogout');
     }
 
-    public function login()
+    public function login(Request $request)
     {
         if (Auth::check()) {
+
             if (auth()->user()->role === "Administrator") {
                 return redirect('home');
             } else {
@@ -37,6 +38,8 @@ class LoginController extends Controller
             'password' => $request->input('password')
         ];
         if (Auth::attempt($data)) {
+            $company = auth()->user()->company;
+            $_SESSION['company'] = $company;
             if (auth()->user()->role === "Administrator") {
                 return redirect('home');
             } else {
@@ -51,6 +54,8 @@ class LoginController extends Controller
     public function actionLogout()
     {
         Auth::logout();
+        session_unset();
+        session_destroy();
         return redirect('/');
     }
 }

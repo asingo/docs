@@ -211,5 +211,5 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
-
+    'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
 ];

@@ -1,0 +1,10 @@
+<ul>
+<li>
+<h2 id="get-started">Get Started</h2>
+<ul>
+<li><a href="/{{route}}/{{version}}/overview">Overview</a></li>
+<li><a href="/{{route}}/{{version}}/coba-ganeeta">Part Two</a></li>
+<li><a href="/{{route}}/{{version}}/coba-ganeeta">Coba</a></li>
+</ul>
+</li>
+</ul>

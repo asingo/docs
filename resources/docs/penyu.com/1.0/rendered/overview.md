@@ -8,4 +8,4 @@
 
 ## First Section
 
-Ganeeta.. 🦊
+Welcome to Grapiku Docs 🦊

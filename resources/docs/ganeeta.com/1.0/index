@@ -1,0 +1,9 @@
+<ul>
+<li>
+<h2 id="get-started">Ganeeta.com</h2>
+<ul>
+<li><a href="/{{route}}/{{version}}/overview">Login dan Logout</a></li>
+<li><a href="/{{route}}/{{version}}/tambah-berita">Menambahkan Blog &amp; Berita</a></li>
+</ul>
+</li>
+</ul>

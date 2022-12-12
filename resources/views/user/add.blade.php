@@ -54,7 +54,7 @@
                 <!-- Password input -->
 
                 <!-- Submit button -->
-                <button type="submit" class="btn btn-primary btn-block mt-2">LOGIN</button>
+                <button type="submit" class="btn btn-primary btn-block mt-2">SUBMIT</button>
             </form>
 
 

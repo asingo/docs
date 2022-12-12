@@ -1,5 +1,14 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+
+session_start();
+$company = "";
+if (isset($_SESSION['company'])) {
+    $company = $_SESSION['company'];
+}
+
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -15,7 +24,7 @@ return [
 
     'docs'        => [
         'route'   => '/docs',
-        'path'    => '/resources/docs/ganeeta.com',
+        'path'    => '/resources/docs/' . $company . '/1.0/',
         'landing' => 'overview',
         'middleware' => ['web'],
     ],
@@ -33,10 +42,9 @@ return [
     */
 
     'versions'      => [
-        'default'   => '1.0',
+        'default'   => 'rendered',
         'published' => [
-            '1.0',
-            'ganeeta.com'
+            'rendered'
         ]
     ],
 

@@ -36,7 +36,7 @@
                         <td>{{$d->email}}</td>
                         <td>{{$d->company}}</td>
                         <td>{{$d->role}}</td>
-                        <td> <a href="javascript:;" class="btn btn-danger" data-mdb-toggle="modal" data-mdb-target="#modalDelete" data-title="{{$d->name}}" data-id="{{$d->id}}"><i class="fas fa-trash"></i> Hapus</a>
+                        <td> <a href="javascript:;" class="btn btn-danger" data-mdb-toggle="modal" data-mdb-target="#modalDelete" data-type="user" data-title="{{$d->name}}" data-id="{{$d->id}}"><i class="fas fa-trash"></i> Hapus</a>
                             <a href="javascript:;" class="btn btn-warning" data-mdb-toggle="modal" data-mdb-target="#modalEdit" data-title="{{$d->name}}" data-id="{{$d->id}}"><i class="fas fa-pen"></i> Update</a>
                         </td>
                     </tr>

@@ -1,0 +1,12 @@
+<h1 id="overview">Tutorial Website Ganeeta Formula Nusantara</h1>
+<hr />
+<h2 id="first-section">Menambahkan Berita &amp; Blog</h2>
+<p>Dalam manajemen berita dan blog/ artikel, dapat dikelola melalui menu POS pada halaman admin. Manajemen berita dan blog diantaranya membuat draf, mengategorikan, menerbitkan, menghapus, menjadwalkan, hingga SEO.</p>
+<ol>
+<li>Untuk mengelola berita dan blog klik menu POS pada bilah menu kiri, maka akan muncul tampilan seperti di bawah ini.<img src="http://localhost:8000/storage/asset/ganeeta.com/tambah-berita.png" alt="" width="1166" height="539" /></li>
+<li style="list-style-type: none;">
+<ol>
+<li>Klik menu TAMBAH BARU atau tombol TAMBAH BARU untuk menambahkan konten berita atau artikel baru</li>
+</ol>
+</li>
+</ol>
