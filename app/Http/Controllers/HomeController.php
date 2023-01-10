@@ -102,6 +102,7 @@ class HomeController extends Controller
         Storage::disk('docs')->put($request->parent . '/1.0/' . $request->title, $request->content);
         $content = Storage::disk('docs')->get($request->parent . '/1.0/' . $request->title);
         $convert = new HtmlConverter();
+        $convert->getConfig()->setOption('hard_break', true);
         $markdown = $convert->convert($content);
         Storage::disk('docs')->put($request->parent . '/1.0/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', $request->title . ' Created Succesfully');
