@@ -153,6 +153,7 @@ class HomeController extends Controller
         $content = Storage::disk('docs')->get($newFileName);
         Storage::disk('docs')->delete($folder . '/rendered/' . $folderArray[2] . '.md');
         $convert = new HtmlConverter();
+        $convert->getConfig()->setOption('hard_break', true);
         $markdown = $convert->convert($content);
         Storage::disk('docs')->put($folder . '/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', 'Save Succesful');
