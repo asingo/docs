@@ -1,3 +1,13 @@
+<style>
+    h4 {
+        margin-top: 1em !important;
+        margin-bottom: 0.5em !important;
+    }
+
+    .documentation p {
+        line-height: 1.5 !important;
+    }
+</style>
 <div class="fixed pin-t pin-x z-40">
     <div class="bg-gradient-primary text-white h-1"></div>
 
