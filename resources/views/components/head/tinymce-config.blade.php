@@ -8,8 +8,9 @@
     // });
     tinymce.init({
         selector: 'textarea#myeditorinstance',
-        plugins: 'code table lists image advcode link textpattern',
+        plugins: 'code table lists image link textpattern',
         toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | link',
+        forced_root_block: false,
         height: window.innerHeight * 0.47,
         relative_urls: false,
         remove_script_host: true,

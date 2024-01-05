@@ -1,24 +1,11 @@
-<style>
-    h4 {
-        margin-top: 1em !important;
-        margin-bottom: 0.5em !important;
-    }
 
-    .documentation p {
-        line-height: 1.5 !important;
-    }
-</style>
 <div class="fixed pin-t pin-x z-40">
     <div class="bg-gradient-primary text-white h-1"></div>
 
     <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
         <div class="flex items-center flex-no-shrink">
             <a href="{{ url('/') }}" class="flex items-center flex-no-shrink text-black mx-4">
-                @include("larecipe::partials.logo")
-
-                <p class="inline-block font-semibold mx-1 text-grey-dark">
-                    {{ config('app.name') }}
-                </p>
+                <img src="/img/grapiku-docs.png" width="120px">
             </a>
 
             <div class="switch">

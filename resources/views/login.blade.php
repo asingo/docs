@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - Grapiku Docs</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> -->
+    <link rel="icon" href="{{ URL::asset('img/favicon-docs.png') }}">
     <link href="{{ URL::asset('css/mdb.min.css'); }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
@@ -88,7 +89,7 @@
                     <form action="{{ route('actionlogin') }}" method="post">
                         @csrf
                         <div class="mb-3 text-center">
-                            <img src="{{URL::asset('img/logo-docs.png');}}">
+                            <img src="{{URL::asset('img/grapiku-docs.png');}}">
                         </div>
                         <div class="mb-2 text-center">
                             <h4>Welcome</h4>

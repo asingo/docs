@@ -102,7 +102,7 @@ class HomeController extends Controller
         Storage::disk('docs')->put($request->parent . '/1.0/' . $request->title, $request->content);
         $content = Storage::disk('docs')->get($request->parent . '/1.0/' . $request->title);
         $convert = new HtmlConverter();
-        $convert->getConfig()->setOption('hard_break', true);
+        $convert->getConfig()->setOption('hard_break', false);
         $markdown = $convert->convert($content);
         Storage::disk('docs')->put($request->parent . '/1.0/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', $request->title . ' Created Succesfully');
@@ -153,7 +153,7 @@ class HomeController extends Controller
         $content = Storage::disk('docs')->get($newFileName);
         Storage::disk('docs')->delete($folder . '/rendered/' . $folderArray[2] . '.md');
         $convert = new HtmlConverter();
-        $convert->getConfig()->setOption('hard_break', true);
+        $convert->getConfig()->setOption('hard_break', false);
         $markdown = $convert->convert($content);
         Storage::disk('docs')->put($folder . '/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', 'Save Succesful');

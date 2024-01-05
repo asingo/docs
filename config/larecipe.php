@@ -104,8 +104,8 @@ return [
     */
 
     'search'            => [
-        'enabled'       => false,
-        'default'       => 'algolia',
+        'enabled'       => true,
+        'default'       => 'internal',
         'engines'       => [
             'internal'  => [
                 'index' => ['h2', 'h3']
@@ -130,16 +130,14 @@ return [
     */
 
     'ui'                 => [
-        'code_theme'     => 'dark', // or: light
-        'fav'            => '',     // eg: fav.png
+        'code_theme'     => 'light', // or: light
+        'fav'            => '/img/favicon-docs.png',     // eg: fav.png
         'fa_v4_shims'    => true, // Add FontAwesome v4 shims prevent BC break
         'show_side_bar'  => true,
         'colors'         => [
             'primary'    => '#9f1d35',
             'secondary'  => '#730e20'
         ],
-
-        'theme_order'    => null // ['LaRecipeDarkTheme', 'customTheme']
     ],
 
     /*

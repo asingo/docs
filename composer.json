@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
@@ -14,9 +17,11 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "league/html-to-markdown": "^5.1",
+        "symfony/filesystem": "^6.2",
         "tinymce/tinymce": "^6.3",
         "unisharp/laravel-filemanager": "^2.5",
-        "yoeunes/toastr": "^2.0"
+        "yoeunes/toastr": "^2.0",
+        "grapiku/docs": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -68,5 +73,15 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./larecipe-components/Docs"
+        },
+        {
+            "type": "path",
+            "url": "./larecipe-components/Docs"
+        }
+    ]
 }

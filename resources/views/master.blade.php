@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{$title}} - Grapiku Docs</title>
+    <link rel="icon" href="{{ URL::asset('img/favicon-docs.png') }}">
     <link href="{{ URL::asset('css/mdb.min.css'); }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
@@ -59,7 +60,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col mb-3">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -74,7 +75,7 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <!-- Navbar brand -->
                             <a class="navbar-brand mt-2 mt-lg-0" href="/">
-                                <img src="{{URL::asset('img/logo-docs.png')}}" height="30" alt="Grapiku Docs Logo" loading="lazy" />
+                                <img src="{{URL::asset('img/grapiku-docs.png')}}" height="30" alt="Grapiku Docs Logo" loading="lazy" />
                             </a>
                             <!-- Left links -->
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
