@@ -203,7 +203,7 @@ class HomeController extends Controller
         }
 
         $pdf = PDF::loadHTML($docs);
-        return $pdf->download($company.'.pdf');
+        return $pdf->download($company.' - Grapiku Docs.pdf');
 
     }
 }
