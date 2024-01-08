@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use League\HTMLToMarkdown\HtmlConverter;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -190,5 +191,19 @@ class HomeController extends Controller
         Storage::disk('docs')->delete($request->path);
         Session::flash('message',  $request->path . ' is Successfully deleted');
         return redirect(url()->previous());
+    }
+
+    public function downloadPdf()
+    {
+        $company = Auth::user()->company;
+        $files = Storage::disk('docs')->files($company .'/1.0');
+        $docs = '';
+        foreach($files as $f){
+            $docs .= Storage::disk('docs')->get($f);
+        }
+
+        $pdf = PDF::loadHTML($docs);
+        return $pdf->download($company.'.pdf');
+
     }
 }

@@ -130,7 +130,7 @@ return [
     */
 
     'ui'                 => [
-        'code_theme'     => 'light', // or: light
+        'code_theme'     => 'dark', // or: light
         'fav'            => '/img/favicon-docs.png',     // eg: fav.png
         'fa_v4_shims'    => true, // Add FontAwesome v4 shims prevent BC break
         'show_side_bar'  => true,

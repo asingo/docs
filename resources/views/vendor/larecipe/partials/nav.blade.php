@@ -15,6 +15,7 @@
         </div>
 
         <div class="block mx-4 flex items-center">
+            <a href="{{route('downloadPdf')}}" class="py-2 px-4 text-white bg-primary rounded-lg inline-flex"><i class="fa fa-download mr-2"> </i> Download PDF</a>
             @if(config('larecipe.search.enabled'))
             <larecipe-button id="search-button" :type="searchBox ? 'primary' : 'link'" @click="searchBox = ! searchBox" class="px-4">
                 <i class="fas fa-search" id="search-button-icon"></i>

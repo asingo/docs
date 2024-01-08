@@ -45,3 +45,6 @@ Route::get('home/docs/create', [HomeController::class, 'create'])->name('create'
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
+Route::middleware(['web','auth'])->group(function (){
+    Route::get('/downloadPdf',[HomeController::class, 'downloadPdf'])->name('downloadPdf');
+});
