@@ -8,10 +8,12 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use League\HTMLToMarkdown\HtmlConverter;
+use Mpdf\Mpdf;
 use PDF;
 
 class HomeController extends Controller
@@ -195,15 +197,43 @@ class HomeController extends Controller
 
     public function downloadPdf()
     {
+        //return view('docs.template.front');
+//
         $company = Auth::user()->company;
-        $files = Storage::disk('docs')->files($company .'/1.0');
-        $docs = '';
-        foreach($files as $f){
-            $docs .= Storage::disk('docs')->get($f);
-        }
+        //$files = Storage::disk('docs')->files($company .'/1.0');
+        $file = Storage::disk('docs')->get($company .'/1.0/index');
+        //dd($file);
+        preg_match_all('/(?=\/[a-z]+)(?:(?!\042|\/li|\/ul|\/h2|\/a).)*/',$file,$matches,);
+        $filtered = array_filter($matches[0], function ($data){
+            return ($data != null);
+        });
+        //dd($filtered);
+        //$docs = '';
+        $i = 1;
+       $pdf_cover = PDF::loadView('docs.template.front');
+       $pdf_cover->save(storage_path('app\temp\joined-'.$company.'0.pdf'));
+       foreach($filtered as $f){
+           $slug = explode('/', $f);
+            $docs = Storage::disk('docs')->get($company .'/1.0/'.$slug[1]);
+            //$docs = Storage::disk('docs')->get($f)
+           $pdf = PDF::loadHTML($docs);
 
-        $pdf = PDF::loadHTML($docs);
-        return $pdf->download($company.'.pdf');
+            $pdf->save(storage_path('app\temp\joined-'.$company.$i++.'.pdf'));
+
+       }
+        $pdf_backcover = PDF::loadView('docs.template.back');
+        $pdf_backcover->save(storage_path('app\temp\joined-'.$company.'9999.pdf'));
+        $merger = new \Jurosh\PDFMerge\PDFMerger;
+       $joined = Storage::files('temp');
+       foreach ($joined as $j){
+           $merger->addPDF(storage_path('app/'.$j));
+       }
+       $merger->merge('file', storage_path('app/temp/Grapiku-Docs_'. $company .'.pdf'));
+       File::delete(File::glob(storage_path('app/temp/joined-*.*')));
+       return response()->download(storage_path('app/temp/Grapiku-Docs_'. $company .'.pdf'),'Grapiku Docs - '.$company.'.pdf')->deleteFileAfterSend(true);
+
+//        $pdf = PDF::loadHTML($docs);
+//        return $pdf->download($company.'.pdf');
 
     }
 }

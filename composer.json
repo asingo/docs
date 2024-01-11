@@ -15,6 +15,7 @@
         "encore/laravel-admin": "^1.8",
         "grapiku/docs": "*",
         "guzzlehttp/guzzle": "^7.2",
+        "jurosh/pdf-merge": "^2.1",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
