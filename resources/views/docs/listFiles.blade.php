@@ -32,8 +32,8 @@
                         <td><a href="#">{{$file[$a++]}}</a></td>
 
                         <td>
-                            <a href="/home/docs/editor?url={{$d}}" class="btn btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                            <a href="javascript:;" class="btn btn-danger" data-type="files" data-mdb-toggle="modal" data-mdb-target="#modalDeleteFile" data-title="{{$d}}" data-id="{{$d}}"><i class="fas fa-trash"></i> Hapus</a>
+                            <a href="/home/docs/editor?url={{$d->id}}" class="btn btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                            <a href="javascript:;" class="btn btn-danger" data-type="files" data-mdb-toggle="modal" data-mdb-target="#modalDeleteFile" data-title="{{$d->title}}" data-id="{{$d->id}}"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                     @endforeach

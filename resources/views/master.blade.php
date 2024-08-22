@@ -181,7 +181,7 @@
                         @csrf
                         <div class="form-outline mb-4">
                             <input type="hidden" name="id" id="idVal">
-                            <input type="text" id="company" name="company" placeholder="Masukkan Password" class="input form-control" required />
+                            <input type="text" id="company" name="company" class="input form-control" required />
                             <label class="form-label" for="company">Site Name</label>
                         </div>
                 </div>
@@ -236,7 +236,7 @@
         var id = div.data('id');
         var modal = $(this);
         modal.find('#nameVal').text(title);
-        modal.find('#path').val(title);
+        modal.find('#path').val(id);
     })
     $('#modalEditParent').on('show.bs.modal', function(event) {
         var div = $(event.relatedTarget);
@@ -245,6 +245,7 @@
         var modal = $(this);
         modal.find('#nameVal').text(title);
         modal.find('#idVal').val(id);
+        modal.find('#company').val(title);
     })
 </script>
 

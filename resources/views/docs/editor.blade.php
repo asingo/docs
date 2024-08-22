@@ -19,6 +19,7 @@
                 <div class="mb-4">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" class="form-control" id="title" name="title" value="{{$fileName}}">
+                    <input type="hidden" name="id" value="{{$id}}">
                 </div>
                 <input type="hidden" name="url" value="{{$title}}">
                 <label for="myeditorinstance" class="form-label">Content</label>

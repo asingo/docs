@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Docs;
 use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Filesystem\Filesystem;
@@ -76,10 +77,14 @@ class HomeController extends Controller
         ];
 
         if ($request->go) {
-            $getFiles = Storage::disk('docs')->files($request->go . '/1.0');
+            $parentId = Folder::where('folder', $request->go)->first()->id;
+            $getFiles = Docs::where('parent', $parentId)->get();
+            //$getFiles = Storage::disk('docs')->files($request->go . '/1.0');
+            $file = [];
             foreach ($getFiles as $g) {
-                $fileName = explode('/', $g);
-                $file[] = $fileName[2];
+                //$fileName = explode('/', $g);
+                //$file[] = $fileName[2];
+                $file[] = $g->title;
             }
             $data = [
                 'title' => 'Docs Manager',
@@ -102,11 +107,18 @@ class HomeController extends Controller
     }
     public function createDocs(Request $request)
     {
-        Storage::disk('docs')->put($request->parent . '/1.0/' . $request->title, $request->content);
-        $content = Storage::disk('docs')->get($request->parent . '/1.0/' . $request->title);
+        $parentId = Folder::where('folder', $request->parent)->first()->id;
+        Docs::create([
+            'parent' => $parentId,
+            'title' => $request->title,
+            'value' => $request->content
+        ]);
+        // Storage::disk('docs')->put($request->parent . '/1.0/' . $request->title, $request->content);
+        // $content = Storage::disk('docs')->get($request->parent . '/1.0/' . $request->title);
+
         $convert = new HtmlConverter();
         $convert->getConfig()->setOption('hard_break', false);
-        $markdown = $convert->convert($content);
+        $markdown = $convert->convert($request->content);
         Storage::disk('docs')->put($request->parent . '/1.0/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', $request->title . ' Created Succesfully');
         return redirect('/home/docsman?go=' . $request->parent);
@@ -121,12 +133,22 @@ class HomeController extends Controller
     }
     public function actionAddParent(Request $request)
     {
-        Folder::create([
+        $parent = Folder::create([
             'folder' => $request->company,
         ]);
         Storage::disk('docs')->makeDirectory($request->company . '/1.0/rendered');
-        Storage::disk('docs')->copy('master/1.0/index', $request->company . '/1.0/index');
-        Storage::disk('docs')->copy('master/1.0/overview', $request->company . '/1.0/overview');
+        //Storage::disk('docs')->copy('master/1.0/index', $request->company . '/1.0/index');
+        //Storage::disk('docs')->copy('master/1.0/overview', $request->company . '/1.0/overview');
+        Docs::create([
+            'parent' => $parent->id,
+            'title' => 'index',
+            'value' => Storage::disk('docs')->get('master/1.0/index')
+        ]);
+        Docs::create([
+            'parent' => $parent->id,
+            'title' => 'overview',
+            'value' => Storage::disk('docs')->get('master/1.0/overview')
+        ]);
         Storage::disk('docs')->copy('master/1.0/rendered/index.md', $request->company . '/1.0/rendered/index.md');
         Storage::disk('docs')->copy('master/1.0/rendered/overview.md', $request->company . '/1.0/rendered/overview.md');
         Session::flash('message', 'Parent Successfully Added');
@@ -135,12 +157,16 @@ class HomeController extends Controller
     public function editor(Request $request)
     {
         $getFileContent = "";
+        $getFileName = "";
         if ($request->url) {
-            $getFileContent = Storage::disk('docs')->get($request->url);
-            $getFileName = basename($request->url);
+            $docs = Docs::where('id', $request->url)->first();
+            //$getFileContent = Storage::disk('docs')->get($request->url);
+            $getFileContent = $docs->value;
+            $getFileName = $docs->title;
         }
         $data = [
-            'title' => $request->url,
+            'id' => $request->url,
+            'title' => $getFileName,
             'fileContent' => $getFileContent,
             'fileName' => $getFileName,
         ];
@@ -148,92 +174,120 @@ class HomeController extends Controller
     }
     public function saveDocs(Request $request)
     {
-        Storage::disk('docs')->delete($request->url);
-        $folderArray = explode('/', $request->url);
-        $folder = $folderArray[0] . '/' . $folderArray[1];
-        $newFileName = $folder . '/' . $request->title;
-        Storage::disk('docs')->put($newFileName, $request->content);
-        $content = Storage::disk('docs')->get($newFileName);
-        Storage::disk('docs')->delete($folder . '/rendered/' . $folderArray[2] . '.md');
+        //dd($request);
+        Docs::where('id', $request->id)->update([
+            'title' => $request->title,
+            'value' => $request->content
+        ]);
+        $file = Docs::where('id', $request->id)->first();
+        $parent = Folder::where('id', $file->parent)->first();
+        //Storage::disk('docs')->delete($request->url);
+        //$folderArray = explode('/', $request->url);
+        // $folder = $folderArray[0] . '/' . $folderArray[1];
+        // $newFileName = $folder . '/' . $request->title;
+        // Storage::disk('docs')->put($newFileName, $request->content);
+        // $content = Storage::disk('docs')->get($newFileName);
+        Storage::disk('docs')->delete($parent->folder . '/rendered/' . $request->title . '.md');
         $convert = new HtmlConverter();
         $convert->getConfig()->setOption('hard_break', false);
-        $markdown = $convert->convert($content);
-        Storage::disk('docs')->put($folder . '/rendered/' . $request->title . '.md', $markdown);
+        $markdown = $convert->convert($request->content);
+        Storage::disk('docs')->put($parent->folder . '/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', 'Save Succesful');
-        return redirect('/home/docs/editor?url=' . $newFileName);
+        return redirect('/home/docs/editor?url=' . $request->id);
     }
     public function removeParent($id)
     {
-        $getFolder =  Folder::where('id', $id)->get();
-        $folder = '';
-        foreach ($getFolder as $g) {
-            $folder = $g->folder;
-        }
-        Storage::disk('docs')->deleteDirectory($folder);
+        $getFolder =  Folder::where('id', $id)->first();
+        // $folder = '';
+        // foreach ($getFolder as $g) {
+        //     $folder = $g->folder;
+        // }
+        Docs::where('parent', $id)->delete();
+        Storage::disk('docs')->deleteDirectory($getFolder->folder);
         Folder::destroy($id);
         Session::flash('message', 'Parent Successfully Removed');
         return redirect('/home/docsman');
     }
     public function editParent(Request $request)
     {
-        $getFolder = Folder::where('id', $request->id)->get();
-        $folder = '';
-        foreach ($getFolder as $g) {
-            $folder = $g->folder;
+        $getFolder = Folder::where('id', $request->id)->first();
+        // $folder = '';
+        // foreach ($getFolder as $g) {
+        //     $folder = $g->folder;
+        // }
+        $file = Docs::where('parent', $getFolder->id)->first();
+        if (!is_null($file)) {
+            Storage::disk('docs')->move($getFolder, $request->company);
+            //rename('../resources/docs/' . $getFolder->folder, '../resources/docs/' . $request->company);
+            Folder::where('id', $request->id)->update([
+                'folder' => $request->company
+            ]);
+            Session::flash('message', $getFolder->folder . ' name successfully changed');
+        } else {
+            Storage::disk('docs')->makeDirectory($request->company . '/1.0/rendered');
+            Docs::create([
+                'parent' => $getFolder->id,
+                'title' => 'index',
+                'value' => Storage::disk('docs')->get('master/1.0/index')
+            ]);
+            Docs::create([
+                'parent' => $getFolder->id,
+                'title' => 'overview',
+                'value' => Storage::disk('docs')->get('master/1.0/overview')
+            ]);
+            Storage::disk('docs')->copy('master/1.0/rendered/index.md', $request->company . '/1.0/rendered/index.md');
+            Storage::disk('docs')->copy('master/1.0/rendered/overview.md', $request->company . '/1.0/rendered/overview.md');
+            Session::flash('message', $getFolder->folder . ' name successfully re-created');
         }
-        rename('../resources/docs/' . $folder, '../resources/docs/' . $request->company);
-        Folder::where('id', $request->id)->update([
-            'folder' => $request->company
-        ]);
-        Session::flash('message', $folder . 'name successfully changed');
+
         return redirect('home/docsman');
     }
     public function delFile(Request $request)
     {
-        Storage::disk('docs')->delete($request->path);
-        Session::flash('message',  $request->path . ' is Successfully deleted');
+        //Storage::disk('docs')->delete($request->path);
+        Docs::where('id', $request->path)->delete();
+        Session::flash('message',  'File is Successfully deleted');
         return redirect(url()->previous());
     }
 
     public function downloadPdf()
     {
         //return view('docs.template.front');
-//
+        //
         $company = Auth::user()->company;
         //$files = Storage::disk('docs')->files($company .'/1.0');
-        $file = Storage::disk('docs')->get($company .'/1.0/index');
+        $file = Storage::disk('docs')->get($company . '/1.0/index');
         //dd($file);
-        preg_match_all('/(?=\/[a-z]+)(?:(?!\042|\/li|\/ul|\/h2|\/a).)*/',$file,$matches,);
-        $filtered = array_filter($matches[0], function ($data){
+        preg_match_all('/(?=\/[a-z]+)(?:(?!\042|\/li|\/ul|\/h2|\/a).)*/', $file, $matches,);
+        $filtered = array_filter($matches[0], function ($data) {
             return ($data != null);
         });
         //dd($filtered);
         //$docs = '';
         $i = 1;
-       $pdf_cover = PDF::loadView('docs.template.front');
-       $pdf_cover->save(storage_path('app\temp\joined-'.$company.'0.pdf'));
-       foreach($filtered as $f){
-           $slug = explode('/', $f);
-            $docs = Storage::disk('docs')->get($company .'/1.0/'.$slug[1]);
+        $pdf_cover = PDF::loadView('docs.template.front');
+        $pdf_cover->save(storage_path('app\temp\joined-' . $company . '0.pdf'));
+        foreach ($filtered as $f) {
+            $slug = explode('/', $f);
+            $docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
             //$docs = Storage::disk('docs')->get($f)
-           $pdf = PDF::loadHTML($docs);
+            $pdf = PDF::loadHTML($docs);
 
-            $pdf->save(storage_path('app\temp\joined-'.$company.$i++.'.pdf'));
-
-       }
+            $pdf->save(storage_path('app\temp\joined-' . $company . $i++ . '.pdf'));
+        }
         $pdf_backcover = PDF::loadView('docs.template.back');
-        $pdf_backcover->save(storage_path('app\temp\joined-'.$company.'9999.pdf'));
+        $pdf_backcover->save(storage_path('app\temp\joined-' . $company . '9999.pdf'));
         $merger = new \Jurosh\PDFMerge\PDFMerger;
-       $joined = Storage::files('temp');
-       foreach ($joined as $j){
-           $merger->addPDF(storage_path('app/'.$j));
-       }
-       $merger->merge('file', storage_path('app/temp/Grapiku-Docs_'. $company .'.pdf'));
-       File::delete(File::glob(storage_path('app/temp/joined-*.*')));
-       return response()->download(storage_path('app/temp/Grapiku-Docs_'. $company .'.pdf'),'Grapiku Docs - '.$company.'.pdf')->deleteFileAfterSend(true);
+        $joined = Storage::files('temp');
+        foreach ($joined as $j) {
+            $merger->addPDF(storage_path('app/' . $j));
+        }
+        $merger->merge('file', storage_path('app/temp/Grapiku-Docs_' . $company . '.pdf'));
+        File::delete(File::glob(storage_path('app/temp/joined-*.*')));
+        return response()->download(storage_path('app/temp/Grapiku-Docs_' . $company . '.pdf'), 'Grapiku Docs - ' . $company . '.pdf')->deleteFileAfterSend(true);
 
-//        $pdf = PDF::loadHTML($docs);
-//        return $pdf->download($company.'.pdf');
+        //        $pdf = PDF::loadHTML($docs);
+        //        return $pdf->download($company.'.pdf');
 
     }
 }

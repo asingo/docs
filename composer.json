@@ -10,10 +10,9 @@
     "require": {
         "php": "^8.0.2",
         "alexusmai/laravel-file-manager": "^3.0",
-        "binarytorch/larecipe": "^2.5",
+        "binarytorch/larecipe": "^2.7",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "encore/laravel-admin": "^1.8",
-        "grapiku/docs": "*",
         "guzzlehttp/guzzle": "^7.2",
         "jurosh/pdf-merge": "^2.1",
         "laravel/framework": "^9.19",
@@ -75,15 +74,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./larecipe-components/Docs"
-        },
-        {
-            "type": "path",
-            "url": "./larecipe-components/Docs"
-        }
-    ]
+    "prefer-stable": true
 }
