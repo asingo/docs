@@ -256,22 +256,24 @@ class HomeController extends Controller
         //
         $company = Auth::user()->company;
         //$files = Storage::disk('docs')->files($company .'/1.0');
-        $file = Storage::disk('docs')->get($company . '/1.0/index');
+        //$file = Storage::disk('docs')->get($company . '/1.0/index');
         //dd($file);
-        preg_match_all('/(?=\/[a-z]+)(?:(?!\042|\/li|\/ul|\/h2|\/a).)*/', $file, $matches,);
-        $filtered = array_filter($matches[0], function ($data) {
-            return ($data != null);
-        });
+        //preg_match_all('/(?=\/[a-z]+)(?:(?!\042|\/li|\/ul|\/h2|\/a).)*/', $file, $matches,);
+        // $filtered = array_filter($matches[0], function ($data) {
+        // return ($data != null);
+        // });
         //dd($filtered);
         //$docs = '';
+        $folder = Folder::where('folder', $company)->first();
+        $docs = Docs::where('parent', $folder->id)->get();
         $i = 1;
         $pdf_cover = PDF::loadView('docs.template.front');
         $pdf_cover->save(storage_path('app\temp\joined-' . $company . '0.pdf'));
-        foreach ($filtered as $f) {
-            $slug = explode('/', $f);
-            $docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
+        foreach ($docs as $f) {
+            //$slug = explode('/', $f);
+            //$docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
             //$docs = Storage::disk('docs')->get($f)
-            $pdf = PDF::loadHTML($docs);
+            $pdf = PDF::loadHTML($f->value);
 
             $pdf->save(storage_path('app\temp\joined-' . $company . $i++ . '.pdf'));
         }
