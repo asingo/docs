@@ -268,17 +268,17 @@ class HomeController extends Controller
         $docs = Docs::where('parent', $folder->id)->get();
         $i = 1;
         $pdf_cover = PDF::loadView('docs.template.front');
-        $pdf_cover->save(storage_path('app\temp\joined-' . $company . '0.pdf'));
+        $pdf_cover->save(storage_path('app/temp/joined-' . $company . '0.pdf'));
         foreach ($docs as $f) {
             //$slug = explode('/', $f);
             //$docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
             //$docs = Storage::disk('docs')->get($f)
             $pdf = PDF::loadHTML($f->value);
 
-            $pdf->save(storage_path('app\temp\joined-' . $company . $i++ . '.pdf'));
+            $pdf->save(storage_path('app/temp/joined-' . $company . $i++ . '.pdf'));
         }
         $pdf_backcover = PDF::loadView('docs.template.back');
-        $pdf_backcover->save(storage_path('app\temp\joined-' . $company . '9999.pdf'));
+        $pdf_backcover->save(storage_path('app/temp/joined-' . $company . '9999.pdf'));
         $merger = new \Jurosh\PDFMerge\PDFMerger;
         $joined = Storage::files('temp');
         foreach ($joined as $j) {
