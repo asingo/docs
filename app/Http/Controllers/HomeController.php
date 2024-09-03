@@ -187,11 +187,11 @@ class HomeController extends Controller
         // $newFileName = $folder . '/' . $request->title;
         // Storage::disk('docs')->put($newFileName, $request->content);
         // $content = Storage::disk('docs')->get($newFileName);
-        Storage::disk('docs')->delete($parent->folder . '/rendered/1.0/' . $request->title . '.md');
+        Storage::disk('docs')->delete($parent->folder . '1.0/rendered/' . $request->title . '.md');
         $convert = new HtmlConverter();
         $convert->getConfig()->setOption('hard_break', false);
         $markdown = $convert->convert($request->content);
-        Storage::disk('docs')->put($parent->folder . '/rendered/1.0/' . $request->title . '.md', $markdown);
+        Storage::disk('docs')->put($parent->folder . '/1.0/rendered/' . $request->title . '.md', $markdown);
         Session::flash('message', 'Save Succesful');
         return redirect('/home/docs/editor?url=' . $request->id);
     }
