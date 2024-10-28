@@ -274,7 +274,7 @@ class HomeController extends Controller
             //$docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
             //$docs = Storage::disk('docs')->get($f)
             $pdf = PDF::loadHTML($f->value);
-            $pdf->showImageErrors = true;
+            $pdf->getMpdf()->showImageErrors = true;
             $pdf->save(storage_path('app/temp/joined-' . $company . $i++ . '.pdf'));
         }
         $pdf_backcover = PDF::loadView('docs.template.back');
