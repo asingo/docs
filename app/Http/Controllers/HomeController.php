@@ -23,6 +23,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
+
     public function index()
     {
         $data = [
@@ -30,6 +31,7 @@ class HomeController extends Controller
         ];
         return view('home', $data);
     }
+
     public function listUser()
     {
         $user = User::all();
@@ -41,6 +43,7 @@ class HomeController extends Controller
 
         return view('user/list', $data);
     }
+
     public function addUser()
     {
         $data = [
@@ -49,12 +52,14 @@ class HomeController extends Controller
 
         return view('user/add', $data);
     }
+
     public function delUser($id)
     {
         User::where('id', $id)->delete();
         Session::flash('message', 'User Deleted Successfully');
         return redirect('/home/user');
     }
+
     public function editUser(Request $request)
     {
         User::where('id', $request->id)->update([
@@ -63,11 +68,13 @@ class HomeController extends Controller
         Session::flash('message', 'Password Changed Successfully');
         return redirect('/home/user');
     }
+
     public function company()
     {
         $company = $this->request->session()->get('company');
         return $company;
     }
+
     public function docsMan(Request $request)
     {
         $listFiles = Folder::all();
@@ -96,6 +103,7 @@ class HomeController extends Controller
         }
         return view('docs/listParent', $data);
     }
+
     public function create(Request $request)
     {
         $template = Storage::disk('docs')->get('master/1.0/overview');
@@ -105,6 +113,7 @@ class HomeController extends Controller
         ];
         return view('docs/create', $data);
     }
+
     public function createDocs(Request $request)
     {
         $parentId = Folder::where('folder', $request->parent)->first()->id;
@@ -123,6 +132,7 @@ class HomeController extends Controller
         Session::flash('message', $request->title . ' Created Succesfully');
         return redirect('/home/docsman?go=' . $request->parent);
     }
+
     public function addParentDocs()
     {
         $data = [
@@ -131,6 +141,7 @@ class HomeController extends Controller
 
         return view('docs/addParent', $data);
     }
+
     public function actionAddParent(Request $request)
     {
         $parent = Folder::create([
@@ -154,6 +165,7 @@ class HomeController extends Controller
         Session::flash('message', 'Parent Successfully Added');
         return redirect('/home/docsman');
     }
+
     public function editor(Request $request)
     {
         $getFileContent = "";
@@ -172,9 +184,9 @@ class HomeController extends Controller
         ];
         return view('docs/editor', $data);
     }
+
     public function saveDocs(Request $request)
     {
-        //dd($request);
         Docs::where('id', $request->id)->update([
             'title' => $request->title,
             'value' => $request->content
@@ -195,9 +207,10 @@ class HomeController extends Controller
         Session::flash('message', 'Save Succesful');
         return redirect('/home/docs/editor?url=' . $request->id);
     }
+
     public function removeParent($id)
     {
-        $getFolder =  Folder::where('id', $id)->first();
+        $getFolder = Folder::where('id', $id)->first();
         // $folder = '';
         // foreach ($getFolder as $g) {
         //     $folder = $g->folder;
@@ -208,6 +221,7 @@ class HomeController extends Controller
         Session::flash('message', 'Parent Successfully Removed');
         return redirect('/home/docsman');
     }
+
     public function editParent(Request $request)
     {
         $getFolder = Folder::where('id', $request->id)->first();
@@ -242,11 +256,12 @@ class HomeController extends Controller
 
         return redirect('home/docsman');
     }
+
     public function delFile(Request $request)
     {
         //Storage::disk('docs')->delete($request->path);
         Docs::where('id', $request->path)->delete();
-        Session::flash('message',  'File is Successfully deleted');
+        Session::flash('message', 'File is Successfully deleted');
         return redirect(url()->previous());
     }
 
@@ -266,6 +281,7 @@ class HomeController extends Controller
         //$docs = '';
         $folder = Folder::where('folder', $company)->first();
         $docs = Docs::where('parent', $folder->id)->get();
+        //dd($docs[4]);
         $i = 1;
         $pdf_cover = PDF::loadView('docs.template.front');
         $pdf_cover->save(storage_path('app/temp/joined-' . $company . '0.pdf'));
@@ -273,7 +289,8 @@ class HomeController extends Controller
             //$slug = explode('/', $f);
             //$docs = Storage::disk('docs')->get($company . '/1.0/' . $slug[1]);
             //$docs = Storage::disk('docs')->get($f)
-            $pdf = PDF::loadHTML($f->value);
+            $pdf = PDF::loadHTML(str_replace('http://docs.grapiku.com', '', $f->value));
+
             $pdf->getMpdf()->showImageErrors = true;
             $pdf->save(storage_path('app/temp/joined-' . $company . $i++ . '.pdf'));
         }
@@ -288,8 +305,8 @@ class HomeController extends Controller
         File::delete(File::glob(storage_path('app/temp/joined-*.*')));
         return response()->download(storage_path('app/temp/Grapiku-Docs_' . $company . '.pdf'), 'Grapiku Docs - ' . $company . '.pdf')->deleteFileAfterSend(true);
 
-        //        $pdf = PDF::loadHTML($docs);
-        //        return $pdf->download($company.'.pdf');
+        $pdf = PDF::loadHTML($docs);
+        return $pdf->download($company . '.pdf');
 
     }
 }

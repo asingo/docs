@@ -170,5 +170,5 @@ return [
      * Enable slugification of filenames of uploaded files.
      *
      */
-    'slugifyNames'      => false,
+    'slugifyNames'      => true,
 ];
